@@ -1,0 +1,9 @@
+<h1>{{title}}</h1>
+<ol>
+  <li *ngFor="let user of users">{{user.userName}}</li>
+</ol>
+
+<div *ngIf="error" >
+  <h1 style="color: red;">{{error.message}}</h1>
+  <h1>{{error.status}}</h1>
+</div>
