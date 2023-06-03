@@ -1,10 +1,6 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-interface User {
-  id: number;
-  userName: string;
-}
+import { AccountService } from './_services/account.service';
+import { User } from './_models/user';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,26 +9,20 @@ interface User {
 export class AppComponent implements OnInit, OnDestroy {
   title = 'Dating App';
   users: User[] = [];
-  error: HttpErrorResponse = {} as HttpErrorResponse;
+
   constructor(
-    private http: HttpClient
+    private accountService: AccountService
   ) {}
 
-
   ngOnInit(): void {
-    this.getUsers();
+    this.setCurrentUser();
   }
 
-  getUsers() {
-    this.http.get<User[]>('http://localhost:5000/api/users')
-      .subscribe({
-        next: (users: User[]) => {
-          this.users = users;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.error = error;
-        }
-      });
+  setCurrentUser() {
+    const userString = localStorage.getItem('user');
+    if (!userString) return;
+    const user: User = JSON.parse(userString);
+    this.accountService.setCurrentUser(user);
   }
 
   ngOnDestroy(): void {
